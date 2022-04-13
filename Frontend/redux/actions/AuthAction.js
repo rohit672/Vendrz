@@ -50,13 +50,17 @@ export const registerCurrentUser = () => {
 
 export const registerUser = (user, dispatch) => {
     (async () => {
+
         const requestData = querystring.stringify({
             name: user.name,
             contact: user.contact,
             email: user.email,
             password: user.password,
-            user_type: user.user_type
+            user_type: user.user_type,
+            city : user.city,
+            locality : user.locality
         });
+        
         const requestConfig = {
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

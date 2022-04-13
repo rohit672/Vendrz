@@ -18,16 +18,18 @@ const ProfileScreen = ({ navigation }) => {
     const [image, setImage] = useState(
         "https://drive.google.com/uc?id=18CXkz-Lqgi04iiL9jV3CtRuoYg6lb3RV"
     );
+
     const [name, setName] = useState("Name");
     const [contact, setContact] = useState(""); 
     const [user, setUser] = useState();
 
     // modification 
     const [city, setCity] = useState("");
-    const [country, setCountry] = useState("");
+    const [locality, setLocality] = useState("");
     
 
     useEffect(() => {
+
         if (user_data.imageUrl != undefined) {
             setImage(user_data.imageUrl);
         }
@@ -39,12 +41,20 @@ const ProfileScreen = ({ navigation }) => {
         }
 
         // modification 
-        if (!token.isVendor && user_data.address.city != undefined) {
-            setCity(user_data.address.city);
+        // if (!token.isVendor && user_data.address.city != undefined) {
+        //     setCity(user_data.address.city);
+        // }
+
+        // if (!token.isVendor && user_data.address.country != undefined) {
+        //     setCountry(user_data.address.country);
+        // }
+
+        if (user_data.city != undefined ) {
+              setCity(user_data.city) ; 
         }
 
-        if (!token.isVendor && user_data.address.country != undefined) {
-            setCountry(user_data.address.country);
+        if (user_data.locality != undefined ) {
+            setLocality(user_data.locality) ; 
         }
 
         const fetchAPI = async () => {
@@ -60,6 +70,7 @@ const ProfileScreen = ({ navigation }) => {
         };
 
         fetchAPI();
+
     }, [user_data]);
     const handleLogout = () => {
         setIsLoggedIn(false);
@@ -108,23 +119,29 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
 
                 <View style={styles.userInfoSection}>
-                    {!token.isVendor && (
+
+                   {/* { !token.isVendor && (
                         <View style={styles.row}>
                             <Icon name="map-marker-radius" color="#777777" size={20} />
-                            {/* <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text> */}
                             <Text style={{ color: "#777777", marginLeft: 20 }}>{city} , {country}</Text>
                         </View>
-                    )}
+                    ) } */}
+
+                        <View style={styles.row}>
+                            <Icon name="map-marker-radius" color="#777777" size={20} />
+                            <Text style={{ color: "#777777", marginLeft: 20 }}> {city} , {locality} </Text>
+                        </View>
+                    
                     <View style={styles.row}>
                         <Icon name="phone" color="#777777" size={20} />
                         <Text style={{ color: "#777777", marginLeft: 20 }}>{contact}</Text>
                     </View>
-                    <View style={styles.row}>
+                    {/* <View style={styles.row}>
                         <Icon name="email" color="#777777" size={20} />
                         <Text style={{ color: "#777777", marginLeft: 20 }}>
                             {isLoggedIn ? user_data.email : ""}
                         </Text>
-                    </View>
+                    </View> */}
                 </View>
                 <View
                     style={{

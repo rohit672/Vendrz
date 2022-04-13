@@ -28,7 +28,17 @@ const userSchema = mongoose.Schema({
     contact : {
         type : String,
         required : true
+    },
+
+    // modification 
+    locality : {
+        type : String 
+    },
+
+    city: {
+       type : String
     }
+
 });
 const User = mongoose.model("User", userSchema);
 module.exports = User;

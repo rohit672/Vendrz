@@ -36,6 +36,10 @@ const EditProfileScreen = ({ navigation }) => {
     const [contact, setContact] = useState("");
     const [imageType, setImageType] = useState("");
 
+    //modification 
+    const [city, setCity] = useState("");
+    const [locality, setLocality] = useState("");
+
     // Only for user-type data
     const [userAddress, setUserAddress] = useState({
         country: "",
@@ -68,7 +72,17 @@ const EditProfileScreen = ({ navigation }) => {
             setUserAddress({ ...userAddress, ...user_data.address });
         }
 
+        //modification 
+        if (user_data.city != undefined) {
+            setCity(user_data.city);
+        }
+        if (user_data.locality != undefined) {
+            setLocality(user_data.locality);
+        }
+
     }, [user_data]);
+
+
     const takePhotoFromCamera = async () => {
         let result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -114,25 +128,33 @@ const EditProfileScreen = ({ navigation }) => {
         form.append("name", name);
         form.append("email", email);
         form.append("contact", contact);
-        if (!token.isVendor) {
-            form.append("street", userAddress.street);
-            form.append("country", userAddress.country);
-            form.append("city", userAddress.city);
-            form.append("postal_code", userAddress.postal_code);
-        }
+        // if (!token.isVendor) {
+        //     form.append("street", userAddress.street);
+        //     form.append("country", userAddress.country);
+        //     form.append("city", userAddress.city);
+        //     form.append("postal_code", userAddress.postal_code);
+        // }
+        form.append("city", city);
+        form.append("locality", locality);
+
         (async () => {
-            const token = await AsyncStorage.getItem("jwt");
+          
+            //modification
+            
+            const authToken = await AsyncStorage.getItem("jwt");
             const requestConfig = {
                 headers: {
                     "Content-Type": `mutlipart/form-data; boundary=${form._boundary}`,
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${authToken}`
                 }
             };
+
             try {
                 let url = `${REST_API_URL}/api/vendor/vendor`;
-                // if (!token.isVendor) {
-                //     url = `${REST_API_URL}/api/user/user`;
-                // }
+                if (!token.isVendor) {
+                    console.log("its a user") ; 
+                    url = `${REST_API_URL}/api/user/user`;
+                }
                 let response = await axios.put(url, form, requestConfig);
                 response = response.data;
                 if (response.success === true) {
@@ -247,6 +269,9 @@ const EditProfileScreen = ({ navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
+
+                    {/* modification  */}
+
                     <View style={styles.action}>
                         <FontAwesome name="envelope-o" size={20} />
                         <TextInput
@@ -261,6 +286,8 @@ const EditProfileScreen = ({ navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
+
+
                     <View style={styles.action}>
                         <FontAwesome name="phone" size={20} />
                         <TextInput
@@ -274,7 +301,37 @@ const EditProfileScreen = ({ navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
-                    {!token.isVendor && (
+
+                    <View style={styles.action}>
+                        <FontAwesome name="globe" size={20} />
+                        <TextInput
+                            placeholder="City"
+                            placeholderTextColor="#666666"
+                            autoCorrect={false}
+                            value={city}
+                            onChangeText={(val) => {
+                                setCity(val);
+                            }}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+                    <View style={styles.action}>
+                        <FontAwesome name="home" size={20} />
+                        <TextInput
+                            placeholder="Locality"
+                            placeholderTextColor="#666666"
+                            autoCorrect={false}
+                            value={locality}
+                            onChangeText={(val) => {
+                                setLocality(val);
+                            }}
+                            style={styles.textInput}
+                        />
+                    </View>
+
+
+                    {/* {!token.isVendor && (
                         <View style={styles.action}>
                             <FontAwesome name="globe" size={20} />
                             <TextInput
@@ -333,7 +390,7 @@ const EditProfileScreen = ({ navigation }) => {
                                 style={styles.textInput}
                             />
                         </View>
-                    )}
+                    )} */}
                     <TouchableOpacity style={styles.commandButton} onPress={handleOnPressSubmit}>
                         <Text style={styles.panelButtonTitle}>Submit</Text>
                     </TouchableOpacity>

@@ -19,10 +19,20 @@ const vendorSchema = mongoose.Schema({
     cloudinary_id: {
         type: String
     },
+
     contact: {
         type: String,
         required: true
+    },
+
+    //modification 
+    city: {
+        type : String
+    },
+    locality : {
+         type : String
     }
+
 });
 const Vendor = mongoose.model("Vendor", vendorSchema);
 module.exports = Vendor;

@@ -38,11 +38,13 @@ const RegisterScreen = ({ navigation }) => {
 
     const [usertype, setUsertype] = useState("0");
     const [isValidType, setIsValidType] = useState(false);
+
     useEffect(() => {
         if (error_message.length > 0) {
             ToastAndroid.show(error_message, ToastAndroid.SHORT);
         }
     }, [error_message]);
+
     useEffect(() => {
         if (success_message === MESSAGES.REGISTERED_SUCCESSFULLY) {
             navigation.navigate("LoginScreen");
@@ -73,6 +75,21 @@ const RegisterScreen = ({ navigation }) => {
         setData({
             ...data,
             name: name
+        });
+    };
+
+    /* modification */ 
+    const cityChangeHandler = (city) => {
+        setData({
+            ...data,
+            city: city
+        });
+    };
+
+    const localityChangeHandler = (locality) => {
+        setData({
+            ...data,
+            locality: locality
         });
     };
 
@@ -121,12 +138,13 @@ const RegisterScreen = ({ navigation }) => {
     };
 
     const handleRegister = () => {
+
         if (!isValidType) {
             dispatch(setErrorMessage("Please select valid user type"));
             return;
         }
 
-        if (!data.name || !data.contact || !data.email || !data.password) {
+        if (!data.name || !data.contact || !data.email || !data.password || !data.city || !data.locality ) {
             dispatch(setErrorMessage("Please fill all details"));
             return;
         }
@@ -149,8 +167,13 @@ const RegisterScreen = ({ navigation }) => {
             password: data.password,
             user_type: usertype,
             name: data.name,
-            contact: data.contact
+            contact: data.contact,
+            city : data.city,
+            locality : data.locality
         };
+
+      //  console.log(user.city + "hey" + user.locality); 
+
         registerUser(user, dispatch);
     };
     
@@ -162,6 +185,7 @@ const RegisterScreen = ({ navigation }) => {
             </View>
             <Animatable.View animation="fadeInUpBig" style={styles.footer}>
                 <ScrollView showsVerticalScrollIndicator={false}>
+
                     {/* NAME */}
                     <Text style={[styles.text_footer]}>Name</Text>
                     <View style={styles.action}>
@@ -227,6 +251,32 @@ const RegisterScreen = ({ navigation }) => {
                                 <Picker.Item label="Vendor" value="vendor" />
                             </Picker>
                         </Item>
+                    </View>
+
+                    
+
+                    {/* City */}
+                    <Text style={[styles.text_footer]}>City</Text>
+                    <View style={styles.action}>
+                        <MaterialIcons name="drive-file-rename-outline" color="#05375a" size={20} />
+                        <TextInput
+                            placeholder="City..."
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => cityChangeHandler(val)}
+                        />
+                    </View>
+
+                    {/* Locality */}
+                    <Text style={[styles.text_footer]}>Locality</Text>
+                    <View style={styles.action}>
+                        <MaterialIcons name="drive-file-rename-outline" color="#05375a" size={20} />
+                        <TextInput
+                            placeholder="Locality"
+                            style={styles.textInput}
+                            autoCapitalize="none"
+                            onChangeText={(val) => localityChangeHandler(val)}
+                        />
                     </View>
 
                     {/* PASSWORD */}

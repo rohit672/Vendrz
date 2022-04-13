@@ -32,39 +32,48 @@ exports.postLogin = async (req, res, next) => {
 };  
 
 exports.postRegister = async (req, res, next) => {
-    let { name, email, password, user_type, contact } = req.body;
+
+    let { name, email, password, user_type, contact , city , locality } = req.body;
+
     // Check if user exists already
     let user = await User.findOne({ email: email });
     if (user) {
-        return res.json({ success: false, message: "User already registered with that email" });
+        return res.json({ success: false, message: "Sorry Email is already taken" });
     }
     user = await Vendor.findOne({ email: email });
     if (user) {
-        return res.json({ success: false, message: "Vendor already registered with that email" });
+        return res.json({ success: false, message: "Sorry Email is already taken" });
     }
 
     // Hashing Password
     const hashedPassword = await bcrypt.hash(password, 8);
+
     if (user_type === "user") {
+
         user = new User({
             name: name,
             email: email,
             password: hashedPassword,
-            contact: contact
+            contact: contact,
+            city : city , 
+            locality : locality 
         });
+
     } else {
         user = new Vendor({
             name: name,
             email: email,
             password: hashedPassword,
-            contact: contact
+            contact: contact,
+            city : city , 
+            locality : locality    
         });
     }
     user = await user.save();
     if (!user) {
-        return res.json({ success: false, message: "User cannot be registered" });
+        return res.json({ success: false, message: "Registration Failed" });
     }
-    res.json({ success: true, message: "User registered successfully", user });
+    res.json({ success: true, message: "Registration Successful", user });
 };
 
 exports.getAllProducts = async (req, res, next) => {
