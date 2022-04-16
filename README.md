@@ -1,7 +1,4 @@
-Updating the Read me...
-
-description:
-how to run on your system
+steps: how to run on your local system
 
 1. clone repo
 2. open backend on cmd
